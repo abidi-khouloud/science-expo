@@ -2,9 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Project Sections</title>
+<title>Science Expo Project</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
+    
+    * {
+    box-sizing: border-box;
+}
+
 body {
     margin: 0;
     height: 100vh;
@@ -13,273 +18,200 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
     color: white;
     position: relative;
-    overflow: hidden;
 }
 
-canvas#bg, canvas#lines {
+/* Background canvas */
+canvas#bg {
     position: absolute;
-    top:0;
-    left:0;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    z-index:0;
+    z-index: 0;
 }
 
-.circle-container {
+/* Responsive card */
+.card {
     position: relative;
-    width: 500px;
-    height: 500px;
-    border-radius: 50%;
-    border: 2px solid cyan;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: rgba(0,0,0,0.7);
-    z-index:1;
-    overflow: hidden;
-    box-shadow: 0 0 35px cyan, inset 0 0 25px cyan;
-}
-
-.half {
-    position: absolute;
-    width: 50%;
-    height: 100%;
-    top: 0;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-    font-size: 28px;
-    color: cyan;
+    background: rgba(0,0,0,0.75);
+    border: 2px solid rgba(0,255,255,0.7);
+    width: 90%;
+    max-width: 500px;
+    padding: 30px 20px;
+    border-radius: 25px;
     text-align: center;
-    transition: background 0.3s;
-}
-.half:hover { background: rgba(0,255,255,0.1); }
-.left { left: 0; border-right: 2px solid cyan; }
-.right { right: 0; border-left: 2px solid cyan; }
-
-.field-container {
-    position: absolute;
-    top: 550px;
-    display: flex;
-    justify-content: space-around;
-    width: 500px;
-    z-index:1;
-    opacity:0;
-    transition: opacity 0.5s;
+    box-shadow:
+        0 0 35px rgba(0, 255, 255, 0.5),
+        inset 0 0 25px rgba(0, 255, 255, 0.2);
+    animation: appear 1.2s ease;
+    z-index: 1;
 }
 
-.field {
-    width: 140px;
-    height: 140px;
-    border-radius: 50%;
-    border: 3px solid cyan;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
+@keyframes appear {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Logo */
+.logo {
+    width: 100px;
+    max-width: 40%;
+    margin-bottom: 20px;
+    animation: pulse 2.5s infinite;
+    filter: drop-shadow(0 0 18px cyan);
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+    100% { transform: scale(1); }
+}
+
+/* Text */
+h1 {
+    margin: 10px 0;
+    font-size: 24px;
+    color: #00ffff;
+    letter-spacing: 1px;
+}
+
+p {
     font-size: 16px;
-    cursor: pointer;
-    position: relative;
-    background: rgba(0,0,0,0.6);
+    color: #d7faff;
+    line-height: 1.5;
 }
 
-.spider {
-    position: absolute;
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
-    background: magenta;
-    z-index:2;
-    transition: all 1.2s ease;
-}
-
-.popup {
-    position: absolute;
-    top: 20%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0,0,0,0.85);
-    border: 2px solid cyan;
-    padding: 20px 30px;
-    border-radius: 20px;
-    font-size: 18px;
-    color: cyan;
-    display: none;
-    z-index:3;
-    text-align:center;
-}
-
-.popup button {
+/* Badge */
+.badge {
     margin-top: 15px;
-    padding: 6px 14px;
-    background: transparent;
-    color: cyan;
+    padding: 8px 15px;
+    display: inline-block;
+    border-radius: 25px;
+    font-size: 14px;
     border: 1px solid cyan;
-    border-radius: 12px;
-    cursor: pointer;
-    font-weight: bold;
+    color: cyan;
+    animation: blink 3s infinite;
 }
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+/* Button */
+.explode-btn {
+    margin-top: 25px;
+    padding: 12px 30px;
+    font-size: 16px;
+    border: none;
+    border-radius: 25px;
+    color: #0f2027;
+    background: cyan;
+    cursor: pointer;
+    box-shadow: 0 0 15px cyan;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.explode-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px cyan;
+}
+
+/* Extra mobile adjustments */
+@media (max-width: 480px) {
+    h1 {
+        font-size: 20px;
+    }
+    p {
+        font-size: 15px;
+    }
+    .explode-btn {
+        width: 100%;
+        padding: 15px;
+        font-size: 18px;
+    }
+}
+
 </style>
 </head>
 <body>
 
 <canvas id="bg"></canvas>
-<canvas id="lines"></canvas>
 
-<div class="circle-container">
-    <div class="half left" onclick="wrongSelection()">Boys Section</div>
-    <div class="half right" onclick="selectGirls()">Girls Section</div>
-</div>
-
-<div class="field-container" id="fields">
-    <div class="field" id="science">Science Section</div>
-    <div class="field" id="physics">Physics Section</div>
-    <div class="field" id="ict" onclick="showProjectPopup()">ICT Section</div>
-</div>
-
-<div class="spider" id="spider"></div>
-
-<div class="popup" id="projectPopup">
-    You can find us here.
-    I am Naghm Al-Qahtani under the supervision creator of this project<br>
-        under the supervision of <strong>Ms. Khouloud Abidi
-    <br><button onclick="goBack()">Back</button>
-</div>
-
-<div class="popup" id="wrongPopup">
-    Oops! Go to the Girls Section 😄
-    <br><button onclick="goBack()">Back</button>
+<div class="card">
+    <img src="logo.png" class="logo" alt="Science Expo Logo">
+    <h1>Synesthetic Interfaces: Gesture, Face & Space in Augmented Reality</h1>
+    <p>
+         <br>
+        The AI processes image data frame-by-frame, identifies key points on the face and hands, and generates interactive digital responses based on movement patterns.
+    </p>
+    <div class="badge">ICT Department - Khouloud Abidi</div>
+    <button class="explode-btn" onclick="goToProject()">EXPLORE</button>
 </div>
 
 <script>
-// ===== Background particle grid =====
+// Particle background
 const canvas = document.getElementById('bg');
 const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
+
 let particles = [];
 const numParticles = 80;
+
 for (let i = 0; i < numParticles; i++) {
     particles.push({
-        x: Math.random()*canvas.width,
-        y: Math.random()*canvas.height,
-        vx: (Math.random()-0.5)*0.8,
-        vy: (Math.random()-0.5)*0.8
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        vx: (Math.random() - 0.5) * 0.8,
+        vy: (Math.random() - 0.5) * 0.8
     });
 }
-function drawParticles() {
+
+function draw() {
     ctx.clearRect(0,0,canvas.width,canvas.height);
-    for(let i=0;i<particles.length;i++){
+    // Draw lines
+    for (let i=0; i<particles.length; i++) {
         let p1 = particles[i];
         ctx.fillStyle = 'cyan';
         ctx.beginPath();
-        ctx.arc(p1.x,p1.y,3,0,Math.PI*2);
+        ctx.arc(p1.x, p1.y, 3, 0, Math.PI*2);
         ctx.fill();
-        for(let j=i+1;j<particles.length;j++){
+
+        for (let j=i+1; j<particles.length; j++) {
             let p2 = particles[j];
-            let dist = Math.hypot(p1.x-p2.x,p1.y-p2.y);
-            if(dist<120){
-                ctx.strokeStyle = 'rgba(0,255,255,'+(1-dist/120)+')';
-                ctx.lineWidth=1;
+            let dist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
+            if (dist < 120) {
+                ctx.strokeStyle = 'rgba(0,255,255,' + (1 - dist/120) + ')';
+                ctx.lineWidth = 1;
                 ctx.beginPath();
-                ctx.moveTo(p1.x,p1.y);
-                ctx.lineTo(p2.x,p2.y);
+                ctx.moveTo(p1.x, p1.y);
+                ctx.lineTo(p2.x, p2.y);
                 ctx.stroke();
             }
         }
         p1.x += p1.vx;
         p1.y += p1.vy;
-        if(p1.x<0||p1.x>canvas.width) p1.vx*=-1;
-        if(p1.y<0||p1.y>canvas.height) p1.vy*=-1;
+
+        if (p1.x < 0 || p1.x > canvas.width) p1.vx *= -1;
+        if (p1.y < 0 || p1.y > canvas.height) p1.vy *= -1;
     }
-    requestAnimationFrame(drawParticles);
+    requestAnimationFrame(draw);
 }
-drawParticles();
+draw();
 
-// ===== Lines for electric effect =====
-const lineCanvas = document.getElementById('lines');
-const lctx = lineCanvas.getContext('2d');
-lineCanvas.width = window.innerWidth;
-lineCanvas.height = window.innerHeight;
-
-function drawElectricLine(x1,y1,x2,y2){
-    const segments = 25;
-    lctx.beginPath();
-    lctx.moveTo(x1,y1);
-    for(let i=1;i<=segments;i++){
-        const t = i/segments;
-        const nx = x1 + (x2-x1)*t + (Math.random()-0.5)*12;
-        const ny = y1 + (y2-y1)*t + (Math.random()-0.5)*12;
-        lctx.lineTo(nx,ny);
-    }
-    lctx.strokeStyle = 'cyan';
-    lctx.lineWidth = 2;
-    lctx.shadowColor = 'cyan';
-    lctx.shadowBlur = 8;
-    lctx.stroke();
+// Button action
+function goToProject() {
+    window.location.href = 'project-details.html';
 }
 
-// ===== Wrong selection =====
-function wrongSelection(){
-    const wrongPopup = document.getElementById('wrongPopup');
-    wrongPopup.style.display = 'block';
-    setTimeout(()=>{wrongPopup.style.display='none';},2500);
-}
-
-// ===== Girls section =====
-function selectGirls(){
-    const fields = document.getElementById('fields');
-    fields.style.opacity = 1;
-
-    const spider = document.getElementById('spider');
-    const container = document.querySelector('.circle-container').getBoundingClientRect();
-
-    spider.style.top = container.top + container.height/2 - 12 + 'px';
-    spider.style.left = container.left + container.width/2 - 12 + 'px';
-
-    // Draw electric lines to all fields
-    const fieldElems = [document.getElementById('science'),
-                        document.getElementById('physics'),
-                        document.getElementById('ict')];
-    lctx.clearRect(0,0,lineCanvas.width,lineCanvas.height);
-    fieldElems.forEach(f=>{
-        const rect = f.getBoundingClientRect();
-        drawElectricLine(container.left+container.width/2, container.top+container.height/2,
-                         rect.left+rect.width/2, rect.top+rect.height/2);
-    });
-
-    // Move spider to ICT Section after delay
-    setTimeout(()=>{
-        const target = document.getElementById('ict').getBoundingClientRect();
-        spider.style.top = target.top + window.scrollY + target.height/2 - 12 + 'px';
-        spider.style.left = target.left + window.scrollX + target.width/2 - 12 + 'px';
-        setTimeout(()=>{
-            document.getElementById('projectPopup').style.display='block';
-        },1200);
-    },500);
-}
-
-// ===== Show project popup on ICT click =====
-function showProjectPopup(){
-    const popup = document.getElementById('projectPopup');
-    popup.style.display='block';
-}
-
-// ===== Back to welcome.html =====
-function goBack(){
-    window.location.href = 'welcome.html';
-}
-
-// ===== Handle resize =====
-window.addEventListener('resize',()=>{
+// Resize
+window.addEventListener('resize', () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    lineCanvas.width = window.innerWidth;
-    lineCanvas.height = window.innerHeight;
 });
 </script>
 
