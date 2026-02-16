@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Science Expo Project</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    * {
+        box-sizing: border-box;
+    }
+    body {
+        margin: 0;
+        height: 100vh;
+        font-family: 'Segoe UI', sans-serif;
+        background: linear-gradient(120deg, #0f2027, #203a43, #2c5364);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        color: white;
+        position: relative;
+    }
+
+    /* Animated particle grid */
+    canvas#bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+    }
+
+    .card {
+        position: relative;
+        background: rgba(0,0,0,0.75);
+        border: 2px solid rgba(0,255,255,0.7);
+        width: 500px;
+        padding: 50px 40px;
+        border-radius: 25px;
+        text-align: center;
+        box-shadow:
+            0 0 35px rgba(0, 255, 255, 0.5),
+            inset 0 0 25px rgba(0, 255, 255, 0.2);
+        animation: appear 1.2s ease;
+        z-index: 1;
+    }
+
+    @keyframes appear {
+        from { opacity: 0; transform: scale(0.8); }
+        to { opacity: 1; transform: scale(1); }
+    }
+
+    .logo {
+        width: 130px;
+        margin-bottom: 25px;
+        animation: pulse 2.5s infinite;
+        filter: drop-shadow(0 0 18px cyan);
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.08); }
+        100% { transform: scale(1); }
+    }
+
+    h1 {
+        margin: 10px 0;
+        font-size: 32px;
+        color: #00ffff;
+        letter-spacing: 2px;
+    }
+
+    p {
+        font-size: 18px;
+        color: #d7faff;
+        line-height: 1.6;
+    }
+
+    .badge {
+        margin-top: 20px;
+        padding: 10px 20px;
+        display: inline-block;
+        border-radius: 25px;
+        font-size: 15px;
+        letter-spacing: 1px;
+        border: 1px solid cyan;
+        color: cyan;
+        animation: blink 3s infinite;
+    }
+
+    @keyframes blink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.4; }
+    }
+
+    /* Button explode */
+    .explode-btn {
+        margin-top: 30px;
+        padding: 15px 40px;
+        font-size: 18px;
+        border: none;
+        border-radius: 25px;
+        color: #0f2027;
+        background: cyan;
+        cursor: pointer;
+        box-shadow: 0 0 15px cyan;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .explode-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 25px cyan;
+    }
+</style>
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+
+<div class="card">
+    <img src="logo.png" class="logo" alt="Science Expo Logo">
+    <h1>Synesthetic Interfaces: Gesture, Face & Space in Augmented Reality</h1>
+    <p>
+         <br>
+        The AI processes image data frame-by-frame, identifies key points on the face and hands, and generates interactive digital responses based on movement patterns.
+    </p>
+    <div class="badge">ICT Department - Khouloud Abidi</div>
+    <button class="explode-btn" onclick="goToProject()">EXPLORE</button>
+</div>
+
+<script>
+// Particle background
+const canvas = document.getElementById('bg');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+const numParticles = 80;
+
+for (let i = 0; i < numParticles; i++) {
+    particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        vx: (Math.random() - 0.5) * 0.8,
+        vy: (Math.random() - 0.5) * 0.8
+    });
+}
+
+function draw() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    // Draw lines
+    for (let i=0; i<particles.length; i++) {
+        let p1 = particles[i];
+        ctx.fillStyle = 'cyan';
+        ctx.beginPath();
+        ctx.arc(p1.x, p1.y, 3, 0, Math.PI*2);
+        ctx.fill();
+
+        for (let j=i+1; j<particles.length; j++) {
+            let p2 = particles[j];
+            let dist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
+            if (dist < 120) {
+                ctx.strokeStyle = 'rgba(0,255,255,' + (1 - dist/120) + ')';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(p1.x, p1.y);
+                ctx.lineTo(p2.x, p2.y);
+                ctx.stroke();
+            }
+        }
+        p1.x += p1.vx;
+        p1.y += p1.vy;
+
+        if (p1.x < 0 || p1.x > canvas.width) p1.vx *= -1;
+        if (p1.y < 0 || p1.y > canvas.height) p1.vy *= -1;
+    }
+    requestAnimationFrame(draw);
+}
+draw();
+
+// Button action
+function goToProject() {
+    window.location.href = 'project-details.html';
+}
+
+// Resize
+window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
+</script>
+
+</body>
+</html>
